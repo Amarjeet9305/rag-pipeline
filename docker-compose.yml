@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: ./docker  # Make sure your Dockerfile is here
+      dockerfile: Dockerfile.backend
+    container_name: rag-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ../.env   # Path to your .env file (adjust relative to docker-compose location)
+    volumes:
+      - ../backend:/app        # Mount backend code
+      - ../backend/uploads:/app/uploads   # Persist uploaded files
+      - ../backend/vector_db:/app/vector_db  # Persist vector database
+    depends_on:
+      - mongo
+    restart: unless-stopped
+
+  mongo:
+    image: mongo:6
+    container_name: rag-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:

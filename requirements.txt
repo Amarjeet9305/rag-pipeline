@@ -1,0 +1,32 @@
+# Core web framework
+Flask==3.0.3
+Flask-Cors==4.0.0
+
+# Vector database (local)
+faiss-cpu==1.8.0
+
+# Text processing
+langchain==0.2.7
+langchain-community==0.2.6
+tiktoken==0.7.0
+
+# Embeddings (OpenAI-compatible or Groq)
+sentence-transformers==2.7.0
+
+# PDF and DOCX parsing
+PyMuPDF==1.24.2
+python-docx==1.1.0
+
+# Database (for metadata)
+SQLAlchemy==2.0.31
+
+# Environment variables
+python-dotenv==1.0.1
+
+# Testing
+pytest==8.2.2
+requests==2.32.3
+
+# Optional (for file upload and async tasks)
+Werkzeug==3.0.2
+aiohttp==3.9.5
