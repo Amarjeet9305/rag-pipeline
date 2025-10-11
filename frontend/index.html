@@ -6,31 +6,83 @@
     <title>RAG Pipeline Chat</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="icon" href="favicon.ico" type="image/x-icon">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
     <div class="container">
-        <h1>RAG Pipeline Chat</h1>
+        <header>
+            <h1>RAG Pipeline Chat</h1>
+            <p class="subtitle">Upload documents and ask questions about their content using our Retrieval-Augmented Generation system</p>
+        </header>
 
-        <!-- File Upload -->
-        <div class="upload-section">
-            <h2>Upload Document</h2>
-            <form id="uploadForm">
-                <input type="file" id="fileInput" required>
-                <button type="submit">Upload</button>
-            </form>
-            <div id="uploadStatus"></div>
-        </div>
+        <div class="main-content">
+            <div class="upload-section">
+                <h2 class="section-title">
+                    <i class="fas fa-file-upload"></i>
+                    Upload Document
+                </h2>
+                
+                <div class="upload-area" id="dropArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p class="upload-text">Drag & drop your files here or click to browse</p>
+                    <div class="file-input-wrapper">
+                        <button class="btn">
+                            <i class="fas fa-folder-open"></i>
+                            Choose Files
+                        </button>
+                        <input type="file" id="fileInput" required>
+                    </div>
+                    <p class="file-types">Supported formats: PDF, DOC, DOCX, TXT</p>
+                </div>
+                
+                <button class="btn btn-outline" id="uploadBtn">
+                    <i class="fas fa-upload"></i>
+                    Upload Document
+                </button>
+                
+                <div id="uploadStatus" class="upload-status"></div>
+                
+                <div class="uploaded-files">
+                    <h3>Uploaded Documents</h3>
+                    <ul class="file-list" id="fileList">
+                        <!-- Files will be added here dynamically -->
+                    </ul>
+                </div>
+            </div>
 
-        <!-- Chat Section -->
-        <div class="chat-section">
-            <h2>Ask About Your Documents</h2>
-            <div id="chatWindow" class="chat-window"></div>
-            <form id="chatForm" class="chat-form">
-                <input type="text" id="chatInput" placeholder="Type your question..." required>
-                <button type="submit">Send</button>
-            </form>
+            <div class="chat-section">
+                <h2 class="section-title">
+                    <i class="fas fa-comments"></i>
+                    Ask About Your Documents
+                </h2>
+                
+                <div id="chatWindow" class="chat-window">
+                    <div class="message bot-message">
+                        <p>Hello! I'm your RAG assistant. Upload a document and ask me questions about its content.</p>
+                        <div class="message-time">Just now</div>
+                    </div>
+                    
+                    <div class="typing-indicator" id="typingIndicator">
+                        <div class="typing-dots">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form id="chatForm" class="chat-form">
+                    <input type="text" id="chatInput" class="chat-input" placeholder="Type your question..." required>
+                    <button type="submit" class="chat-btn">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
         </div>
+        
+        <footer>
+            <p>RAG Pipeline Chat Interface &copy; 2023 | Powered by Advanced AI</p>
+        </footer>
     </div>
 
     <script src="app.js"></script>
