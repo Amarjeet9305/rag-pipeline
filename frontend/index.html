@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RAG Pipeline Chat</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+</head>
+<body>
+    <div class="container">
+        <h1>RAG Pipeline Chat</h1>
+
+        <!-- File Upload -->
+        <div class="upload-section">
+            <h2>Upload Document</h2>
+            <form id="uploadForm">
+                <input type="file" id="fileInput" required>
+                <button type="submit">Upload</button>
+            </form>
+            <div id="uploadStatus"></div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section">
+            <h2>Ask About Your Documents</h2>
+            <div id="chatWindow" class="chat-window"></div>
+            <form id="chatForm" class="chat-form">
+                <input type="text" id="chatInput" placeholder="Type your question..." required>
+                <button type="submit">Send</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
