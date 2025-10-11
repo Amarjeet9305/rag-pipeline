@@ -26,20 +26,20 @@ def upload():
             file_path = os.path.join(UPLOAD_DIR, f.filename)
             f.save(file_path)
 
-            print(f"📂 File saved: {file_path}")  # Debug log
-            print("🚀 Calling process_and_store_file...")
+            print(f" File saved: {file_path}")  # Debug log
+            print(" Calling process_and_store_file...")
 
             # Call ingestion
             try:
                 res = process_and_store_file(file_path)
-                print(f"✅ Ingestion completed for: {f.filename}")
+                print(f" Ingestion completed for: {f.filename}")
                 results.append({"file": f.filename, "status": "success"})
             except Exception as e:
-                print(f"❌ Error ingesting {f.filename}: {e}")
+                print(f" Error ingesting {f.filename}: {e}")
                 results.append({"file": f.filename, "status": "failed", "error": str(e)})
 
         return jsonify({"uploaded": results}), 200
 
     except Exception as e:
-        print(f"🔥 Upload route error: {e}")
+        print(f" Upload route error: {e}")
         return jsonify({"error": str(e)}), 500

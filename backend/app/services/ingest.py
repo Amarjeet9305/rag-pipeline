@@ -30,45 +30,45 @@ def process_and_store_file(file_path):
     filename = os.path.basename(file_path)
     filename = secure_filename(filename)
 
-    # ✅ Check allowed file types
+    # Check allowed file types
     if not allowed_file(filename):
-        log(f"❌ File type not allowed: {filename}")
+        log(f" File type not allowed: {filename}")
         return {"error": f"File type not allowed: {filename}"}
 
-    # ✅ Verify file exists
+    # Verify file exists
     if not os.path.exists(file_path):
-        log(f"❌ File does not exist: {file_path}")
+        log(f" File does not exist: {file_path}")
         return {"error": f"File not found: {file_path}"}
 
     file_size = os.path.getsize(file_path)
 
-    # ✅ Generate a unique document ID
+    # Generate a unique document ID
     doc_id = generate_id("doc")
     log(f"📄 Processing document: {filename} (ID: {doc_id})")
 
-    # ✅ Step 1: Extract text from file
+    # Step 1: Extract text from file
     try:
         text = extract_text_from_file(file_path)
         if not text.strip():
             log(f"⚠️ No text extracted from {filename}")
             return {"error": f"No text could be extracted from {filename}"}
     except Exception as e:
-        log(f"❌ Text extraction failed for {filename}: {e}")
+        log(f" Text extraction failed for {filename}: {e}")
         return {"error": f"Text extraction failed for {filename}: {e}"}
 
-    # ✅ Step 2: Chunk the text
+    # Step 2: Chunk the text
     chunks = chunk_text(text, chunk_size=1000, overlap=100)
-    log(f"✂️ Generated {len(chunks)} chunks from {filename}")
+    log(f" Generated {len(chunks)} chunks from {filename}")
 
-    # ✅ Step 3: Generate embeddings for chunks
+    #  Step 3: Generate embeddings for chunks
     try:
         embeddings = create_embeddings(chunks)
-        log(f"🧠 Created embeddings for {filename}")
+        log(f" Created embeddings for {filename}")
     except Exception as e:
-        log(f"❌ Embedding creation failed for {filename}: {e}")
+        log(f" Embedding creation failed for {filename}: {e}")
         return {"error": f"Embedding creation failed for {filename}: {e}"}
 
-    # ✅ Step 4: Store embeddings in vector store
+    # Step 4: Store embeddings in vector store
     chunk_data = []
     for i, chunk_text_data in enumerate(chunks):
         chunk_id = generate_id("chunk")
@@ -80,22 +80,22 @@ def process_and_store_file(file_path):
 
     try:
         add_embeddings(chunk_data, embeddings)
-        log(f"📦 Stored embeddings for {filename}")
+        log(f" Stored embeddings for {filename}")
     except Exception as e:
-        log(f"❌ Failed to store embeddings for {filename}: {e}")
+        log(f" Failed to store embeddings for {filename}: {e}")
         return {"error": f"Failed to store embeddings for {filename}: {e}"}
 
-    # ✅ Step 5: Store metadata in MongoDB
+    # Step 5: Store metadata in MongoDB
     try:
         insert_document_metadata(filename, file_path, len(chunks), file_size, doc_id)
         for c in chunk_data:
             insert_chunk_metadata(c["doc_id"], c["chunk_id"], c["text"])
-        log(f"🗂️ Stored metadata for {filename}")
+        log(f" Stored metadata for {filename}")
     except Exception as e:
-        log(f"❌ Failed to store metadata for {filename}: {e}")
+        log(f" Failed to store metadata for {filename}: {e}")
         return {"error": f"Failed to store metadata for {filename}: {e}"}
 
-    log(f"✅ Document {filename} successfully processed and stored.")
+    log(f" Document {filename} successfully processed and stored.")
 
     return {
         "filename": filename,
