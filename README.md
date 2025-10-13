@@ -1,7 +1,10 @@
 # RAG Pipeline Chat - Backend
+**This is My Frontend Interface user can Upload file and Query chat Interface**
 
-
-
+<img width="1366" height="768" alt="Screenshot (481)" src="https://github.com/user-attachments/assets/7c72087f-c33e-406d-8d4d-816489d41f71" />
+**
+This is a chat Interface User can query realted to uploaded document.**
+<img width="1366" height="768" alt="Screenshot (482)" src="https://github.com/user-attachments/assets/201c5fa4-44aa-46fd-b43d-259cb112dd08" />
 
 
 ---
@@ -34,3 +37,7 @@
 ```bash
 git clone <repo-url>
 cd rag-pipeline/backend
+
+
+**He tested the output. Some answers were 🔥 perfect, some were 🤦‍♂️ “Oops… not again!”
+Lesson learned: Even RAG pipelines need a coffee ☕ and a nap 😴 sometimes. Made by Amarjeet.**
