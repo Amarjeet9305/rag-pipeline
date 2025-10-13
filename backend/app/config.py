@@ -30,3 +30,5 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 UPLOAD_FOLDER = os.path.join(BASE_DIR, "uploads")
 MAX_CONTENT_LENGTH = 100 * 1024 * 1024  # 100MB max per file
 ALLOWED_EXTENSIONS = {"pdf", "txt", "docx"}
+print("✅ GROQ_API_KEY loaded:", bool(GROQ_API_KEY))
+

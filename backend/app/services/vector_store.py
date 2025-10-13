@@ -29,7 +29,7 @@ def get_text_embedding(text):
         }
         data = {
             "input": text,
-            "model": "text-embedding-ada-002"  # Replace with Groq-supported embedding model if different
+            "model": "nomic-embed-text-v1.5"  # "text-embedding-ada-002" Replace with Groq-supported embedding model if different
         }
 
         response = requests.post(url, headers=headers, json=data)
@@ -90,3 +90,4 @@ def search_embeddings(query_text, top_k=5):
 
     results = query_vector_db(query_embedding, top_k=top_k)
     return results
+

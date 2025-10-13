@@ -60,3 +60,4 @@ def ask_question(query: str):
     except Exception as e:
         log(f" Unexpected error in RAG pipeline: {e}")
         return "Error processing your request."
+

@@ -6,76 +6,69 @@ import json
 
 query_bp = Blueprint("query", __name__, url_prefix="/query")
 
-# Available Groq models
-AVAILABLE_MODELS = {
-    "llama3": "llama3-70b-8192",
-    "mixtral": "mixtral-8x7b-32768",
-    "gemma2": "gemma2-9b-it"
+# Multiple model options
+GROQ_MODELS = {
+    "llama3-8b": "llama3-8b-8192",
+    "llama3-70b": "llama3-70b-8192",
+    "mixtral": "mixtral-8x7b-32768"
 }
 
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-
 
 @query_bp.route("/", methods=["POST"])
 def query():
     try:
         data = request.get_json()
         user_query = data.get("query", "").strip()
-        model_key = data.get("model", "llama3").lower()  # default to llama3
+        model_choice = data.get("model", "llama3-8b")
 
         if not user_query:
             return jsonify({"error": "No query provided"}), 400
 
-        # Validate selected model
-        if model_key not in AVAILABLE_MODELS:
-            return jsonify({
-                "error": f"Invalid model '{model_key}'. Available models: {list(AVAILABLE_MODELS.keys())}"
-            }), 400
-
-        selected_model = AVAILABLE_MODELS[model_key]
-        print(f" Using model: {selected_model}")
-
-        # Retrieve top relevant chunks from vector store
+        # ✅ Retrieve top relevant chunks from vector store
         relevant_docs = search_embeddings(user_query, top_k=3)
         context = "\n\n".join([doc["text"] for doc in relevant_docs]) if relevant_docs else ""
 
         if not context:
             return jsonify({
-                "answer": "No relevant document found. Please upload a file first."
+                "answer": "⚠️ No relevant content found. Please upload a document first."
             })
 
-        # Construct Groq API payload
+        # ✅ Construct Groq API payload
         headers = {
             "Authorization": f"Bearer {GROQ_API_KEY}",
             "Content-Type": "application/json",
         }
 
         payload = {
-            "model": selected_model,
+            "model": GROQ_MODELS.get(model_choice, "llama3-8b-8192"),
             "messages": [
-                {"role": "system", "content": "You are a helpful assistant that answers based on provided context."},
+                {"role": "system", "content": "You are an assistant that answers based on the document context."},
                 {"role": "user", "content": f"Context:\n{context}\n\nQuestion:\n{user_query}"}
             ],
             "temperature": 0.3,
-            "max_tokens": 500
+            "max_tokens": 1000
         }
 
-        # Call Groq API
+        print(f"\n🚀 Sending request to Groq model: {payload['model']}")
         response = requests.post(GROQ_URL, headers=headers, data=json.dumps(payload))
-        response.raise_for_status()
-        result = response.json()
+        print("📩 Groq Status:", response.status_code)
 
-        # Extract answer
+        if response.status_code != 200:
+            print("❌ Groq API Error:", response.text)
+            return jsonify({"error": "Groq API request failed", "details": response.text}), 500
+
+        result = response.json()
         answer = result["choices"][0]["message"]["content"]
 
-        print(f" Query successful | Model: {selected_model} | Contexts used: {len(relevant_docs)}")
-
+        print("✅ Groq Response:", answer[:200], "...")
         return jsonify({
             "answer": answer,
-            "model_used": selected_model,
-            "context_used": len(relevant_docs)
+            "context_used": len(relevant_docs),
+            "model_used": payload["model"]
         })
 
     except Exception as e:
-        print(f" Query error: {e}")
-        return jsonify({"error": f"Query processing failed: {str(e)}"}), 500
+        print(f"❌ Query error: {e}")
+        return jsonify({"error": f"Query failed: {str(e)}"}), 500
+
