@@ -1,19 +1,52 @@
-version: "3.8"
+# # version: "3.8"
+
+# services:
+#   backend:
+#     build:
+#       context: ./docker  # Make sure your Dockerfile is here
+#       dockerfile: Dockerfile.backend
+#     container_name: rag-backend
+#     ports:
+#       - "8000:8000"
+#     env_file:
+#       - .env   # Path to your .env file (adjust relative to docker-compose location)
+#     volumes:
+#       - ../backend:/app        # Mount backend code
+#       - ../backend/uploads:/app/uploads   # Persist uploaded files
+#       - ../backend/vector_db:/app/vector_db  # Persist vector database
+#     depends_on:
+#       - mongo
+#     restart: unless-stopped
+
+#   mongo:
+#     image: mongo:6
+#     container_name: rag-mongo
+#     restart: unless-stopped
+#     ports:
+#       - "27017:27017"
+#     volumes:
+#       - mongo_data:/data/db
+
+# volumes:
+#   mongo_data:
+# version: "3.8"
 
 services:
   backend:
     build:
-      context: ./docker  # Make sure your Dockerfile is here
-      dockerfile: Dockerfile.backend
+      context: .  # FIX 1: Set build context to the project root (where docker-compose.yml is)
+      dockerfile: docker/Dockerfile.backend # Now correctly points from the root context
     container_name: rag-backend
     ports:
       - "8000:8000"
     env_file:
-      - ../.env   # Path to your .env file (adjust relative to docker-compose location)
+      - .env   # Path to your .env file
     volumes:
-      - ../backend:/app        # Mount backend code
-      - ../backend/uploads:/app/uploads   # Persist uploaded files
-      - ../backend/vector_db:/app/vector_db  # Persist vector database
+      # FIX 2: Mount the entire project root (including the /app/app structure)
+      - .:/app        
+      # The persistent directories (uploads, vector_db) are subfolders of the project root,
+      # and Docker will automatically create them inside the container's /app/ directory.
+      # We no longer need the explicit volume mapping for sub-directories if they are part of the project.
     depends_on:
       - mongo
     restart: unless-stopped
